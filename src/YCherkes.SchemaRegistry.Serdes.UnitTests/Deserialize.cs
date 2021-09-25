@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
 using Avro.Specific;
 using Confluent.Kafka;
 using Confluent.Kafka.Examples.AvroSpecific;
 using Confluent.SchemaRegistry;
 using Confluent.SchemaRegistry.Serdes;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 using YCherkes.SchemaRegistry.Serdes.Avro;
 
@@ -21,13 +21,14 @@ namespace YCherkes.SchemaRegistry.Serdes.UnitTests
         {
             _testTopic = "topic";
             var schemaRegistryMock = new Mock<ISchemaRegistryClient>();
+#pragma warning disable 618
             schemaRegistryMock.Setup(x => x.ConstructValueSubjectName(_testTopic, It.IsAny<string>())).Returns($"{_testTopic}-value");
             schemaRegistryMock.Setup(x => x.RegisterSchemaAsync("topic-value", It.IsAny<string>())).ReturnsAsync(
-                (string topic, string schema) => _store.TryGetValue(schema, out int id) ? id : _store[schema] = _store.Count + 1
+                (string _, string schema) => _store.TryGetValue(schema, out int id) ? id : _store[schema] = _store.Count + 1
             );
-            schemaRegistryMock.Setup(x => x.GetSchemaAsync(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(
-                (int id, string format) => new Schema(_store.First(x => x.Value == id).Key, null, SchemaType.Avro)
-            );
+#pragma warning restore 618
+            schemaRegistryMock.Setup(x => x.GetSchemaAsync(It.IsAny<int>(), It.IsAny<string>()))
+                .ReturnsAsync((int id, string _) => new Schema(_store.First(x => x.Value == id).Key, null, SchemaType.Avro));
             _schemaRegistryClient = schemaRegistryMock.Object;
         }
 
