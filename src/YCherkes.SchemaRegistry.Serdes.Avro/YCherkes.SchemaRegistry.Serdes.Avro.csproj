@@ -3,19 +3,27 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Provides a deserializer for use with Confluent.Kafka with Confluent Schema Registry integration.</Description>
+    <Description>Provides a custom Avro deserializer for reading messages serialized with multiple schemas.</Description>
     <Copyright>Copyright 2021 Yevhen Cherkes.</Copyright>
     <Authors>Yevhen Cherkes</Authors>
-    <PackageTags>Kafka Confluent Schema Registry Avro</PackageTags>
+    <PackageTags>Kafka;Confluent;librdkafka;multiple</PackageTags>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ycherkes/multi-schema-avro-desrializer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ycherkes/multi-schema-avro-desrializer</RepositoryUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="1.8.1" />
     <PackageReference Include="Confluent.SchemaRegistry" Version="1.8.1" />
     <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="1.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
