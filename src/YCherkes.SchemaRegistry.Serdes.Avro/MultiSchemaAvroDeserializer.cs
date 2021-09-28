@@ -65,9 +65,9 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
 
         public async Task<ISpecificRecord> DeserializeAsync(ReadOnlyMemory<byte> data, bool isNull, SerializationContext context)
         {
-            var deserializer = await GetDeserializer(data);
+            var deserializer = await GetDeserializer(data).ConfigureAwait(continueOnCapturedContext: false);
 
-            return deserializer == null ? null : await deserializer.DeserializeAsync(data, isNull, context);
+            return deserializer == null ? null : await deserializer.DeserializeAsync(data, isNull, context).ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private IAsyncDeserializer<ISpecificRecord> CreateDeserializer(Type specificType, AvroDeserializerConfig avroDeserializerConfig)
@@ -85,7 +85,7 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
                 return deserializer;
             }
 
-            var confluentSchema = await _schemaRegistryClient.GetSchemaAsync(schemaId);
+            var confluentSchema = await _schemaRegistryClient.GetSchemaAsync(schemaId).ConfigureAwait(continueOnCapturedContext: false);
             var avroSchema = global::Avro.Schema.Parse(confluentSchema.SchemaString);
 
             _ = _deserializersBySchemaName.TryGetValue(avroSchema.Fullname, out deserializer);
@@ -127,7 +127,7 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
 
             public async Task<ISpecificRecord> DeserializeAsync(ReadOnlyMemory<byte> data, bool isNull, SerializationContext context)
             {
-                return await _avroDeserializer.DeserializeAsync(data, isNull, context);
+                return await _avroDeserializer.DeserializeAsync(data, isNull, context).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
     }
