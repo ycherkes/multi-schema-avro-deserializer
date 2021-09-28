@@ -1,5 +1,9 @@
-Provides a custom Avro deserializer for reading messages serialized with multiple schemas.
+Avro deserializer for reading messages serialized with multiple schemas.
 ===========================================================================================
+
+<p align="center">
+ <a href="https://www.nuget.org/packages/YCherkes.SchemaRegistry.Serdes.Avro"><img src="https://img.shields.io/badge/Nuget-v1.0.0-blue?logo=nuget"></a>
+</p>
 
 To install YCherkes.SchemaRegistry.Serdes.Avro from within Visual Studio, search for YCherkes.SchemaRegistry.Serdes.Avro in the NuGet Package Manager UI, or run the following command in the Package Manager Console:
 
