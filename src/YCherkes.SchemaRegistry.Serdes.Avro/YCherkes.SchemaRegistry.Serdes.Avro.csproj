@@ -6,13 +6,13 @@
     <Description>Avro deserializer for reading messages serialized with multiple schemas.</Description>
     <Copyright>Copyright 2021 Yevhen Cherkes.</Copyright>
     <Authors>Yevhen Cherkes</Authors>
-    <PackageTags>Kafka;Confluent;librdkafka;multiple schemas</PackageTags>
+    <PackageTags>Kafka;Confluent;librdkafka;multiple event types</PackageTags>
     <PackageLicenseExpression></PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/ycherkes/multi-schema-avro-desrializer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ycherkes/multi-schema-avro-desrializer</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>1.0.1</Version>
-    <PackageReleaseNotes>Added ConfigureAwait(false) on all async calls.</PackageReleaseNotes>
+    <Version>1.0.2</Version>
+    <PackageReleaseNotes>Fixed "Type collection must contain at least one item." exception when assembly that contains generated records hasn't been loaded before instatiation of MultiSchemaAvroDeserializer.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
