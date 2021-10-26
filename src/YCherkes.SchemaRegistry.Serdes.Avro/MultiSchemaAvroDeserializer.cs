@@ -22,8 +22,7 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
 
         public MultiSchemaAvroDeserializer(ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
             : this(schemaRegistryClient,
-                  AppDomain.CurrentDomain
-                  .GetAssemblies()
+                  ReflectionHelper.GetAssemblies()
                   .SelectMany(a => a.GetTypes())
                   .Where(t => t.IsClass && !t.IsAbstract && typeof(ISpecificRecord).IsAssignableFrom(t) && GetSchema(t) != null),
                    avroDeserializerConfig,
