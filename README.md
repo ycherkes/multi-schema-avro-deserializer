@@ -8,13 +8,13 @@ Avro deserializer for reading messages serialized with multiple schemas.
 To install YCherkes.SchemaRegistry.Serdes.Avro from within Visual Studio, search for YCherkes.SchemaRegistry.Serdes.Avro in the NuGet Package Manager UI, or run the following command in the Package Manager Console:
 
 ```
-Install-Package YCherkes.SchemaRegistry.Serdes.Avro -Version 1.0.1
+Install-Package YCherkes.SchemaRegistry.Serdes.Avro -Version 1.0.2
 ```
 
 To add a reference to a dotnet core project, execute the following at the command line:
 
 ```
-dotnet add package -v 1.0.1 YCherkes.SchemaRegistry.Serdes.Avro
+dotnet add package -v 1.0.2 YCherkes.SchemaRegistry.Serdes.Avro
 ```
 
 
