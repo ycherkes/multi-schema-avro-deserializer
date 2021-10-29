@@ -11,8 +11,8 @@
     <PackageProjectUrl>https://github.com/ycherkes/multi-schema-avro-desrializer</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ycherkes/multi-schema-avro-desrializer</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <Version>1.0.2</Version>
-    <PackageReleaseNotes>Fixed "Type collection must contain at least one item." exception when assembly that contains generated records hasn't been loaded before instatiation of MultiSchemaAvroDeserializer.</PackageReleaseNotes>
+    <Version>1.0.3</Version>
+    <PackageReleaseNotes>Added SpecificTypes helper.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
