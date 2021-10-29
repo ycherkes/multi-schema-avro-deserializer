@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using YCherkes.SchemaRegistry.Serdes.Avro.Helpers;
 
 namespace YCherkes.SchemaRegistry.Serdes.Avro
 {
@@ -22,9 +23,7 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
 
         public MultiSchemaAvroDeserializer(ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
             : this(schemaRegistryClient,
-                  ReflectionHelper.GetAssemblies()
-                  .SelectMany(a => a.GetTypes())
-                  .Where(t => t.IsClass && !t.IsAbstract && typeof(ISpecificRecord).IsAssignableFrom(t) && GetSchema(t) != null),
+                   ReflectionHelper.GetSpecificTypes(AppDomain.CurrentDomain.GetAssemblies()),
                    avroDeserializerConfig,
                    checkTypes: false)
         {
@@ -33,6 +32,13 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
         public MultiSchemaAvroDeserializer(Func<IEnumerable<Type>> typeProvider, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
             : this(schemaRegistryClient,
                   (typeProvider ?? throw new ArgumentNullException(nameof(typeProvider)))(),
+                   avroDeserializerConfig)
+        {
+        }
+
+        public MultiSchemaAvroDeserializer(ISpecificTypeProvider typeProvider, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
+            : this(schemaRegistryClient,
+                  (typeProvider ?? throw new ArgumentNullException(nameof(typeProvider))).GetSpecificTypes(),
                    avroDeserializerConfig)
         {
         }
@@ -53,7 +59,7 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
                 throw new ArgumentException("Type collection must contain at least one item.", nameof(types));
             }
 
-            if (checkTypes && !typeArray.All(t => t.IsClass && !t.IsAbstract && typeof(ISpecificRecord).IsAssignableFrom(t) && GetSchema(t) != null))
+            if (checkTypes && !typeArray.All(ReflectionHelper.IsSpecificType))
             {
                 throw new ArgumentOutOfRangeException(nameof(types));
             }
