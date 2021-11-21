@@ -1,4 +1,4 @@
-Avro deserializer for reading messages serialized with multiple schemas.
+Avro deserializer for Multiple Event Types in the Same Topic.
 ===========================================================================================
 
 <p align="center">
