@@ -81,7 +81,10 @@ class Program
         }
         catch (OperationCanceledException)
         {
-            // Ensure the consumer leaves the group cleanly and final offsets are committed.
+            // Ctrl-C was pressed.
+        }
+        finally
+        {
             consumer.Close();
         }
     }
