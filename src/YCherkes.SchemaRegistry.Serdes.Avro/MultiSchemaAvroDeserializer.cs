@@ -132,7 +132,12 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
 
             public async Task<ISpecificRecord> DeserializeAsync(ReadOnlyMemory<byte> data, bool isNull, SerializationContext context)
             {
-                return await _avroDeserializer.DeserializeAsync(data, isNull, context).ConfigureAwait(continueOnCapturedContext: false);
+                if(isNull)
+                {
+                    return null;
+                }
+
+                return await _avroDeserializer.DeserializeAsync(data, false, context).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
     }
