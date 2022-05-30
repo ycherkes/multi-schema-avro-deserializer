@@ -4,13 +4,13 @@ Avro deserializer for Multiple Event Types in the Same Topic.
 ===========================================================================================
 
 <p align="center">
- <a href="https://www.nuget.org/packages/YCherkes.SchemaRegistry.Serdes.Avro"><img src="https://img.shields.io/badge/Nuget-v1.0.3-blue?logo=nuget"></a>
+ <a href="https://www.nuget.org/packages/YCherkes.SchemaRegistry.Serdes.Avro"><img src="https://img.shields.io/badge/Nuget-v1.0.4-blue?logo=nuget"></a>
 </p>
 
 To install YCherkes.SchemaRegistry.Serdes.Avro from within Visual Studio, search for YCherkes.SchemaRegistry.Serdes.Avro in the NuGet Package Manager UI, or run the following command in the Package Manager Console:
 
 ```
-Install-Package YCherkes.SchemaRegistry.Serdes.Avro -Version 1.0.3
+Install-Package YCherkes.SchemaRegistry.Serdes.Avro -Version 1.0.4
 ```
 
 To add a reference to a dotnet core project, execute the following at the command line:
