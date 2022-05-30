@@ -1,3 +1,4 @@
+using System;
 using Avro.Specific;
 using Confluent.Kafka;
 using Confluent.Kafka.Examples.AvroSpecific;
@@ -52,6 +53,16 @@ namespace YCherkes.SchemaRegistry.Serdes.UnitTests
             Assert.Equal(user.name, resultUser.name);
             Assert.Equal(user.favorite_color, resultUser.favorite_color);
             Assert.Equal(user.favorite_number, resultUser.favorite_number);
+        }
+
+        [Fact]
+        public void ISpecificRecord_AllowNulls()
+        {
+            var deserializer = new MultiSchemaAvroDeserializer(_schemaRegistryClient, allowNulls: true);
+
+           var result = deserializer.DeserializeAsync(Array.Empty<byte>(), true, new SerializationContext(MessageComponentType.Value, _testTopic)).Result;
+
+            Assert.Null(result);
         }
 
         [Fact]
