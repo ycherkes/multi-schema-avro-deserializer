@@ -1,3 +1,5 @@
+# [Stand with the people of Ukraine: How to Help](https://dou.ua/lenta/articles/stand-with-ukraine/?hl=en)
+
 Avro deserializer for Multiple Event Types in the Same Topic.
 ===========================================================================================
 
