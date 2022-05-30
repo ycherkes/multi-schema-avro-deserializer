@@ -16,7 +16,7 @@ Install-Package YCherkes.SchemaRegistry.Serdes.Avro -Version 1.0.4
 To add a reference to a dotnet core project, execute the following at the command line:
 
 ```
-dotnet add package -v 1.0.3 YCherkes.SchemaRegistry.Serdes.Avro
+dotnet add package -v 1.0.4 YCherkes.SchemaRegistry.Serdes.Avro
 ```
 
 
