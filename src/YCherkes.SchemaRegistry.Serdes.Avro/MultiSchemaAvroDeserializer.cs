@@ -20,37 +20,42 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
         private readonly Dictionary<string, IAsyncDeserializer<ISpecificRecord>> _deserializersBySchemaName;
         private readonly ConcurrentDictionary<int, IAsyncDeserializer<ISpecificRecord>> _deserializersBySchemaId;
         private readonly ISchemaRegistryClient _schemaRegistryClient;
+        private readonly bool _allowNulls;
 
-        public MultiSchemaAvroDeserializer(ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
+        public MultiSchemaAvroDeserializer(ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null, bool allowNulls = false)
             : this(schemaRegistryClient,
                    ReflectionHelper.GetSpecificTypes(AppDomain.CurrentDomain.GetAssemblies()),
                    avroDeserializerConfig,
+                   allowNulls,
                    checkTypes: false)
         {
         }
 
-        public MultiSchemaAvroDeserializer(Func<IEnumerable<Type>> typeProvider, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
+        public MultiSchemaAvroDeserializer(Func<IEnumerable<Type>> typeProvider, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null, bool allowNulls = false)
             : this(schemaRegistryClient,
                   (typeProvider ?? throw new ArgumentNullException(nameof(typeProvider)))(),
-                   avroDeserializerConfig)
+                   avroDeserializerConfig, 
+                   allowNulls)
         {
         }
 
-        public MultiSchemaAvroDeserializer(ISpecificTypeProvider typeProvider, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
+        public MultiSchemaAvroDeserializer(ISpecificTypeProvider typeProvider, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null, bool allowNulls = false)
             : this(schemaRegistryClient,
                   (typeProvider ?? throw new ArgumentNullException(nameof(typeProvider))).GetSpecificTypes(),
-                   avroDeserializerConfig)
+                   avroDeserializerConfig, 
+                   allowNulls)
         {
         }
 
-        public MultiSchemaAvroDeserializer(IEnumerable<Type> types, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null)
-            : this(schemaRegistryClient, types, avroDeserializerConfig)
-        {   
+        public MultiSchemaAvroDeserializer(IEnumerable<Type> types, ISchemaRegistryClient schemaRegistryClient, AvroDeserializerConfig avroDeserializerConfig = null, bool allowNulls = false)
+            : this(schemaRegistryClient, types, avroDeserializerConfig, allowNulls)
+        {
         }
 
-        private MultiSchemaAvroDeserializer(ISchemaRegistryClient schemaRegistryClient, IEnumerable<Type> types, AvroDeserializerConfig avroDeserializerConfig, bool checkTypes = true)
+        private MultiSchemaAvroDeserializer(ISchemaRegistryClient schemaRegistryClient, IEnumerable<Type> types, AvroDeserializerConfig avroDeserializerConfig, bool allowNulls, bool checkTypes = true)
         {
-            this._schemaRegistryClient = schemaRegistryClient ?? throw new ArgumentNullException(nameof(schemaRegistryClient));
+            _schemaRegistryClient = schemaRegistryClient ?? throw new ArgumentNullException(nameof(schemaRegistryClient));
+            _allowNulls = allowNulls;
 
             var typeArray = (types ?? throw new ArgumentNullException(nameof(types))).ToArray();
 
@@ -70,6 +75,11 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
 
         public async Task<ISpecificRecord> DeserializeAsync(ReadOnlyMemory<byte> data, bool isNull, SerializationContext context)
         {
+            if (isNull && _allowNulls)
+            {
+                return null;
+            }
+
             var deserializer = await GetDeserializer(data).ConfigureAwait(continueOnCapturedContext: false);
 
             return deserializer == null ? null : await deserializer.DeserializeAsync(data, isNull, context).ConfigureAwait(continueOnCapturedContext: false);
@@ -132,11 +142,6 @@ namespace YCherkes.SchemaRegistry.Serdes.Avro
 
             public async Task<ISpecificRecord> DeserializeAsync(ReadOnlyMemory<byte> data, bool isNull, SerializationContext context)
             {
-                if(isNull)
-                {
-                    return null;
-                }
-
                 return await _avroDeserializer.DeserializeAsync(data, false, context).ConfigureAwait(continueOnCapturedContext: false);
             }
         }
