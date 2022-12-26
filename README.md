@@ -3,9 +3,8 @@
 Avro deserializer for Multiple Event Types in the Same Topic.
 ===========================================================================================
 
-<p align="center">
- <a href="https://www.nuget.org/packages/YCherkes.SchemaRegistry.Serdes.Avro"><img src="https://img.shields.io/badge/Nuget-v1.0.4-blue?logo=nuget"></a>
-</p>
+[![nuget version](https://img.shields.io/badge/Nuget-v1.0.4-blue)](https://www.nuget.org/packages/YCherkes.SchemaRegistry.Serdes.Avro)
+[![nuget downloads](https://img.shields.io/nuget/dt/YCherkes.SchemaRegistry.Serdes.Avro?label=Downloads)](https://www.nuget.org/packages/YCherkes.SchemaRegistry.Serdes.Avro)
 
 To install YCherkes.SchemaRegistry.Serdes.Avro from within Visual Studio, search for YCherkes.SchemaRegistry.Serdes.Avro in the NuGet Package Manager UI, or run the following command in the Package Manager Console:
 
