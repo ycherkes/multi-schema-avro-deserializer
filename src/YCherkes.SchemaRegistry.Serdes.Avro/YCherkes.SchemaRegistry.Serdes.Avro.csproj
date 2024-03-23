@@ -12,7 +12,8 @@
     <RepositoryUrl>https://github.com/ycherkes/multi-schema-avro-desrializer</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Version>1.0.5</Version>
-    <PackageReleaseNotes>Added SpecificTypes helper.</PackageReleaseNotes>
+    <PackageReleaseNotes>Updated vulnerable Apache.Avro 1.10.2 library and all dependants.</PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +26,10 @@
     <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
