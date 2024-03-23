@@ -7,6 +7,7 @@ using Confluent.SchemaRegistry.Serdes;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 using YCherkes.SchemaRegistry.Serdes.Avro;
 
@@ -24,8 +25,8 @@ namespace YCherkes.SchemaRegistry.Serdes.UnitTests
             var schemaRegistryMock = new Mock<ISchemaRegistryClient>();
 #pragma warning disable 618
             schemaRegistryMock.Setup(x => x.ConstructValueSubjectName(_testTopic, It.IsAny<string>())).Returns($"{_testTopic}-value");
-            schemaRegistryMock.Setup(x => x.RegisterSchemaAsync("topic-value", It.IsAny<string>())).ReturnsAsync(
-                (string _, string schema) => _store.TryGetValue(schema, out int id) ? id : _store[schema] = _store.Count + 1
+            schemaRegistryMock.Setup(x => x.RegisterSchemaAsync("topic-value", It.IsAny<string>(), false)).ReturnsAsync(
+                (string _, string schema, bool _) => _store.TryGetValue(schema, out int id) ? id : _store[schema] = _store.Count + 1
             );
 #pragma warning restore 618
             schemaRegistryMock.Setup(x => x.GetSchemaAsync(It.IsAny<int>(), It.IsAny<string>()))
@@ -34,7 +35,7 @@ namespace YCherkes.SchemaRegistry.Serdes.UnitTests
         }
 
         [Fact]
-        public void ISpecificRecord_MultiSchemaDeserializer()
+        public async Task ISpecificRecord_MultiSchemaDeserializer()
         {
             var serializer = new AvroSerializer<ISpecificRecord>(_schemaRegistryClient);
             var deserializer = new MultiSchemaAvroDeserializer(_schemaRegistryClient);
@@ -46,8 +47,8 @@ namespace YCherkes.SchemaRegistry.Serdes.UnitTests
                 name = "awesome"
             };
 
-            var bytes = serializer.SerializeAsync(user, new SerializationContext(MessageComponentType.Value, _testTopic)).Result;
-            var resultUser = deserializer.DeserializeAsync(bytes, false, new SerializationContext(MessageComponentType.Value, _testTopic)).Result as User;
+            var bytes = await serializer.SerializeAsync(user, new SerializationContext(MessageComponentType.Value, _testTopic));
+            var resultUser = await deserializer.DeserializeAsync(bytes, false, new SerializationContext(MessageComponentType.Value, _testTopic)) as User;
 
             Assert.NotNull(resultUser);
             Assert.Equal(user.name, resultUser.name);
@@ -56,17 +57,17 @@ namespace YCherkes.SchemaRegistry.Serdes.UnitTests
         }
 
         [Fact]
-        public void ISpecificRecord_AllowNulls()
+        public async Task ISpecificRecord_AllowNulls()
         {
             var deserializer = new MultiSchemaAvroDeserializer(_schemaRegistryClient, allowNulls: true);
 
-           var result = deserializer.DeserializeAsync(Array.Empty<byte>(), true, new SerializationContext(MessageComponentType.Value, _testTopic)).Result;
+           var result = await deserializer.DeserializeAsync(Array.Empty<byte>(), true, new SerializationContext(MessageComponentType.Value, _testTopic));
 
             Assert.Null(result);
         }
 
         [Fact]
-        public void Multiple_ISpecificRecords_MultiSchemaDeserializer()
+        public async Task Multiple_ISpecificRecords_MultiSchemaDeserializer()
         {
             var serializer = new AvroSerializer<ISpecificRecord>(_schemaRegistryClient);
             var deserializer = new MultiSchemaAvroDeserializer(_schemaRegistryClient);
@@ -84,16 +85,16 @@ namespace YCherkes.SchemaRegistry.Serdes.UnitTests
                 name = "great_brand"
             };
 
-            var bytesUser = serializer.SerializeAsync(user, new SerializationContext(MessageComponentType.Value, _testTopic)).Result;
-            var resultUser = deserializer.DeserializeAsync(bytesUser, false, new SerializationContext(MessageComponentType.Value, _testTopic)).Result as User;
+            var bytesUser = await serializer.SerializeAsync(user, new SerializationContext(MessageComponentType.Value, _testTopic));
+            var resultUser = await deserializer.DeserializeAsync(bytesUser, false, new SerializationContext(MessageComponentType.Value, _testTopic)) as User;
 
             Assert.NotNull(resultUser);
             Assert.Equal(user.name, resultUser.name);
             Assert.Equal(user.favorite_color, resultUser.favorite_color);
             Assert.Equal(user.favorite_number, resultUser.favorite_number);
 
-            var bytesCar = serializer.SerializeAsync(car, new SerializationContext(MessageComponentType.Value, _testTopic)).Result;
-            var resultCar = deserializer.DeserializeAsync(bytesCar, false, new SerializationContext(MessageComponentType.Value, _testTopic)).Result as Car;
+            var bytesCar = await serializer.SerializeAsync(car, new SerializationContext(MessageComponentType.Value, _testTopic));
+            var resultCar = await deserializer.DeserializeAsync(bytesCar, false, new SerializationContext(MessageComponentType.Value, _testTopic)) as Car;
 
             Assert.NotNull(resultCar);
             Assert.Equal(car.name, resultCar.name);
